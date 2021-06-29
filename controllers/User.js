@@ -10,6 +10,7 @@ exports.signup = (req, res, next) => {
             username: req.body.username,
             password: hash,
             contactName : req.body.contactName,
+            profile : req.body.profile
         })
         user.save()
         .then(()=> res.status(200).json({message: 'user created'}))
@@ -41,4 +42,35 @@ exports.login = (req, res, next) => {
         .catch(error => res.status(500).json({ error }))
     })
     .catch(error => res.status(500).json({ error }))
+}
+
+exports.getOneUser = (req, res, next) => {
+    User.findOne({ _id: req.params.id })
+    .then((user) => { res.status(200).json(user) })
+    .catch((error) => { res.status(404).json({ error }) })
+}
+
+    
+exports.modifyUser = (req, res, next) => {
+    const user = new User({
+      _id: req.params.id,
+      username: req.body.username,
+      password: req.body.password,
+      contactName: req.body.contactName,
+      profile: req.body.profile,
+    });
+    User.updateOne({_id: req.params.id}, user)
+    .then(() => { res.status(201).json({ message: 'User updated successfully!' }) })
+    .catch((error) => { res.status(400).json({ error }) })
+}
+
+exports.deleteUser = (req, res, next) => {
+    User.deleteOne({_id: req.params.id})
+    .then(() => { res.status(200).json({ message: 'Deleted!' }) })
+    .catch((error) => { res.status(400).json({ error }) })
+}
+  
+exports.getAllUsers = (req, res, next) => {
+    User.find().then((users) => { res.status(200).json(users) })
+    .catch((error) => { res.status(400).json({ error }) })
 }
