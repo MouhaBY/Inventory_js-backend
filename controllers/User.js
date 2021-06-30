@@ -9,8 +9,8 @@ exports.signup = (req, res, next) => {
         const user = new User({
             username: req.body.username,
             password: hash,
-            contactName : req.body.contactName,
-            profile : req.body.profile
+            contact : req.body.contact,
+            isAdmin : req.body.isAdmin
         })
         user.save()
         .then(()=> res.status(200).json({message: 'user created'}))
@@ -50,14 +50,13 @@ exports.getOneUser = (req, res, next) => {
     .catch((error) => { res.status(404).json({ error }) })
 }
 
-    
 exports.modifyUser = (req, res, next) => {
     const user = new User({
       _id: req.params.id,
       username: req.body.username,
       password: req.body.password,
-      contactName: req.body.contactName,
-      profile: req.body.profile,
+      contact: req.body.contact,
+      isAdmin: req.body.isAdmin,
     });
     User.updateOne({_id: req.params.id}, user)
     .then(() => { res.status(201).json({ message: 'User updated successfully!' }) })
@@ -71,6 +70,6 @@ exports.deleteUser = (req, res, next) => {
 }
   
 exports.getAllUsers = (req, res, next) => {
-    User.find().then((users) => { res.status(200).json(users) })
+    User.find().then((users) => { res.status(200).json({results : users}) })
     .catch((error) => { res.status(400).json({ error }) })
 }
